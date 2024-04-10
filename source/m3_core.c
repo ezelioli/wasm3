@@ -50,7 +50,7 @@ uint64_t m3_GetTimestamp()
 
 #if d_m3FixedHeap
 
-static u8 fixedHeap[d_m3FixedHeap];
+static u8 fixedHeap[d_m3FixedHeap] __attribute__((section(".l2_data")));
 static u8* fixedHeapPtr = fixedHeap;
 static u8* const fixedHeapEnd = fixedHeap + d_m3FixedHeap;
 static u8* fixedHeapLast = NULL;
