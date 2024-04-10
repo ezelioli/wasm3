@@ -65,11 +65,19 @@ void *  m3_Malloc_Impl  (size_t i_size)
 {
     u8 * ptr = fixedHeapPtr;
 
+#ifdef DBGEXT
+    printf("== Called malloc (size = 0x%08X)\n", i_size);
+    printf("== Heap base : 0x%08x\n", (unsigned int) fixedHeap);
+    printf("== Heap end  : 0x%08x\n", (unsigned int) fixedHeapEnd);
+    printf("== Heap ptr  : 0x%08x\n", (unsigned int) fixedHeapPtr);
+#endif // DBGEXT
+
     fixedHeapPtr += i_size;
     HEAP_ALIGN_PTR(fixedHeapPtr);
 
     if (fixedHeapPtr >= fixedHeapEnd)
     {
+        printf("== malloc failed due to insufficient heap space\n");
         return NULL;
     }
 

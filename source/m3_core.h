@@ -224,6 +224,8 @@ void *      m3_CopyMem              (const void * i_from, size_t i_size);
 
 #if d_m3LogHeapOps
 
+#include <stdio.h>
+
 // Tracing format: timestamp;heap:OpCode;name;size(bytes);new items;new ptr;old items;old ptr
 
 static inline void * m3_AllocStruct_Impl(ccstr_t name, size_t i_size) {

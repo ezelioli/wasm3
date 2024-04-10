@@ -9,6 +9,8 @@
 #include "m3_compile.h"
 #include "m3_exception.h"
 #include "m3_info.h"
+#include <stdio.h>
+
 
 
 M3Result  ParseType_Table  (IM3Module io_module, bytes_t i_bytes, cbytes_t i_end)
@@ -601,6 +603,21 @@ M3Result  ParseModuleSection  (M3Module * o_module, u8 i_sectionType, bytes_t i_
     return result;
 }
 
+const char *section_names[] = {
+    "Custom",    // 0
+    "Type",      // 1
+    "Import",    // 2
+    "Function",  // 3
+    "Table",     // 4: TODO Table
+    "Memory",    // 5
+    "Global",    // 6
+    "Export",    // 7
+    "Start",     // 8
+    "Element",   // 9
+    "Code",      // 10
+    "Data",      // 11
+    "DataCount", // 12: TODO DataCount
+};
 
 M3Result  m3_ParseModule  (IM3Environment i_environment, IM3Module * o_module, cbytes_t i_bytes, u32 i_numBytes)
 {
@@ -644,6 +661,8 @@ _       (ReadLEB_u7 (& section, & pos, end));
         u32 sectionLength;
 _       (ReadLEB_u32 (& sectionLength, & pos, end));
         _throwif(m3Err_wasmMalformed, pos + sectionLength > end);
+
+        printf("Parsing section %s, len=0x%x\n", section_names[section], sectionLength);
 
 _       (ParseModuleSection (module, section, pos, sectionLength));
 

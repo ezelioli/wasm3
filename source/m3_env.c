@@ -5,6 +5,7 @@
 //  Copyright © 2019 Steven Massey. All rights reserved.
 //
 
+#include <stdio.h>
 #include <stdarg.h>
 #include <limits.h>
 
@@ -17,6 +18,8 @@
 IM3Environment  m3_NewEnvironment  ()
 {
     IM3Environment env = m3_AllocStruct (M3Environment);
+
+    printf("Allocated environment at 0x%08x\n", (unsigned int) env);
 
     if (env)
     {
@@ -172,7 +175,11 @@ void  Environment_ReleaseCodePages  (IM3Environment i_environment, IM3CodePage i
 
 IM3Runtime  m3_NewRuntime  (IM3Environment i_environment, u32 i_stackSizeInBytes, void * i_userdata)
 {
+    printf("Allocating runtime..\n");
+
     IM3Runtime runtime = m3_AllocStruct (M3Runtime);
+
+    printf("Allocated runtime at 0x%08x\n", (unsigned int) runtime);
 
     if (runtime)
     {
@@ -340,6 +347,9 @@ M3Result  InitMemory  (IM3Runtime io_runtime, IM3Module i_module)
     {
         u32 maxPages = i_module->memoryInfo.maxPages;
         io_runtime->memory.maxPages = maxPages ? maxPages : 65536;
+
+        printf("Memory pages : %d\n", i_module->memoryInfo.initPages);
+        printf("Page size    : %d\n", d_m3MemPageSize);
 
         result = ResizeMemory (io_runtime, i_module->memoryInfo.initPages);
     }
@@ -907,6 +917,8 @@ _   (checkStartFunction(i_function->module))
         default: return "unknown argument type";
         }
     }
+
+    printf("Running function..\n");
 
 # if (d_m3EnableOpProfiling || d_m3EnableOpTracing)
     result = (M3Result) RunCode (i_function->compiled, (m3stack_t)(runtime->stack), runtime->memory.mallocated, d_m3OpDefaultArgs, d_m3BaseCstr);
